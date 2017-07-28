@@ -1,14 +1,13 @@
 # use-native-code
 
-A Clojure library designed to ... well, that part is up to you.
+Attempts to use some native code following the CalendarManager exaple at https://facebook.github.io/react-native/docs/native-modules-ios.html
 
-## Usage
+The problem is that the `RCT_EXPORT_MODULE();` code runs and registers the native code, but 
 
-FIXME
+```
+(.-NativeModules (js/require "react-native"))
+```
 
-## License
+yields `#js {}`
 
-Copyright © 2017 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+To repro, clone this repo, run `yarn` and then `react-native run-ios` and `lein figwheel ios`. Then try evaluating the form above that looks at the `NativeModules` property.
