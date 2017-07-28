@@ -11,3 +11,5 @@ The problem is that the `RCT_EXPORT_MODULE();` code runs and registers the nativ
 yields `#js {}`
 
 To repro, clone this repo, run `yarn` and then `react-native run-ios` and `re-natal use-figwheel` and `lein figwheel ios`. Then try evaluating the form above that looks at the `NativeModules` property.
+
+If you `re-natal xcode` and add a breakpoint on the line with `RCT_EXPORT_MODULE();` in `CalendarManager.m`, you'll see that the native code module is registered.
