@@ -22,3 +22,27 @@ If you enable remote JS debugging, then things will work (and when doing so you 
 ios:cljs.user=> (js-keys (.-NativeModules (js/require "react-native")))
 #js ["CalendarManager" "StatusBarManager" "SourceCode" "AlertManager" "ExceptionsManager" "DevMenu" "AsyncLocalStorage" "DevSettings" "ScrollViewManager" "JSCSamplingProfiler" "AccessibilityManager" "DevLoadingView" "Timing" "AppState" "DeviceInfo" "Clipboard" "PlatformConstants" "KeyboardObserver" "I18nManager" "WebViewManager" "RedBox" "UIManager" "NavigatorManager" "NativeAnimatedModule" "ActionSheetManager" "LocationObserver" "ImageStoreManager" "ImageViewManager" "ImageEditingManager" "LinkingManager" "NetInfo" "Networking" "SettingsManager" "Vibration" "WebSocketModule"]
 ```
+
+Update: (Credit to Paulus Esterhazy)
+
+`NativeModules` appears to be a magical object for which you cannot enumerate the keys, but things still work:
+
+```
+ios:cljs.user=> (.. (js/require "react-native") -NativeModules -CalendarManager)
+#js {:addEvent #object[fn "function fn() {
+      for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+
+      var lastArg = args.length > 0 ? args[args.length - 1] : null;
+      var secondLastArg = args.length > 1 ? args[args.length - 2] : null;
+      var hasSuccessCallback = typeof lastArg === 'function';
+      var hasErrorCallback = typeof secondLastArg === 'function';
+      hasErrorCallback && invariant(hasSuccessCallback, 'Cannot have a non-function arg after a function arg.');
+      var onSuccess = hasSuccessCallback ? lastArg : null;
+      var onFail = hasErrorCallback ? secondLastArg : null;
+      var callbackCount = hasSuccessCallback + hasErrorCallback;
+      args = args.slice(0, args.length - callbackCount);
+      BatchedBridge.enqueueNativeCall(moduleID, methodID, args, onFail, onSuccess);
+    }"]}
+```
